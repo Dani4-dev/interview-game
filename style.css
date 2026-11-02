@@ -1,0 +1,501 @@
+/* Единица размера: 1em внутри #game = 1.5% ширины игрового поля, всё масштабируется вместе с окном */
+:root {
+  --u: min(1vw, 1.6vh);
+  --fs: calc(var(--u) * 1.5);
+  --ink: #e9e2cf;
+  --paper: #d9d0b3;
+  --paper-ink: #2a2418;
+  --line: #7a6c4e;
+  --gold: #d1b46a;
+  --ok: #4fd36b;
+  --bad: #e0524a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #0b0a08;
+  color: var(--ink);
+  font-family: "Courier New", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Meiryo", "MS Gothic",
+    "Noto Sans CJK JP", "Noto Sans JP", ui-monospace, monospace;
+  overflow: hidden;
+}
+
+body { display: flex; align-items: center; justify-content: center; }
+
+.hidden { display: none !important; }
+
+#game {
+  position: relative;
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * 62.5);
+  background: #0d0c0a;
+  overflow: hidden;
+  font-size: var(--fs);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  box-shadow: 0 0 calc(var(--u) * 4) rgba(0, 0, 0, .9);
+}
+
+/* ---------- Сцена ---------- */
+#scene {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 62%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 0;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#fx {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 62%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0, 0, 0, .6) 100%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .13) 0 1px, transparent 1px 3px);
+}
+
+/* ---------- HUD ---------- */
+#hud {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: .6em .8em;
+  pointer-events: none;
+}
+#hud > * { pointer-events: auto; }
+
+#nameplate {
+  position: absolute;
+  top: .6em;
+  left: .8em;
+  z-index: 30;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border: .15em solid #8a7a52;
+  padding: .3em .7em;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  max-width: 34%;
+  box-shadow: .2em .2em 0 rgba(0, 0, 0, .5);
+}
+#nameplate strong { font-size: 1em; }
+#nameplate small { font-size: .7em; opacity: .85; }
+#np-industry { font-style: italic; opacity: .7; }
+
+#hud-right { display: flex; gap: .5em; align-items: center; }
+
+#progress {
+  background: rgba(0, 0, 0, .55);
+  border: .1em solid var(--line);
+  padding: .25em .6em;
+  font-size: .75em;
+}
+
+#lang, #dev-btn, #menu-btn {
+  background: #2c261d;
+  color: var(--ink);
+  border: .12em solid var(--line);
+  font: inherit;
+  font-size: .75em;
+  padding: .3em .6em;
+  cursor: pointer;
+}
+#dev-btn:hover, #lang:hover, #menu-btn:hover { border-color: #b9a572; }
+#dev-btn.active { background: #1f4d2b; border-color: var(--ok); color: #d6ffe0; }
+
+/* ---------- Меню и подтверждение ---------- */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 5, 3, .78);
+}
+.overlay.top { z-index: 60; background: rgba(6, 5, 3, .6); }
+.overlay.behind .menu-card { visibility: hidden; }
+
+.menu-card {
+  width: 44%;
+  max-width: none;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  gap: .7em;
+  text-align: left;
+}
+.menu-card h2 { margin: 0 0 .1em; text-align: center; font-size: 1.3em; letter-spacing: .1em; text-transform: uppercase; }
+.menu-card p { margin: 0; text-align: center; font-size: 1.05em; }
+.menu-card .big { text-align: center; }
+.menu-card .big.quiet { background: transparent; color: var(--paper-ink); }
+.menu-card .big.quiet:hover { background: rgba(42, 36, 24, .12); }
+.menu-row { display: flex; justify-content: space-between; align-items: center; gap: 1em; }
+.menu-row span { font-weight: bold; }
+.menu-card #lang, .menu-card #dev-btn {
+  font-size: .9em;
+  min-width: 9em;
+  padding: .35em .8em;
+  background: var(--paper-ink);
+  color: var(--paper);
+  border-color: var(--paper-ink);
+  text-align: center;
+}
+.menu-card #dev-btn.active { background: #1f4d2b; border-color: #1f4d2b; color: #d6ffe0; }
+.confirm-actions { display: flex; gap: .8em; justify-content: center; }
+.confirm-actions .big { flex: 1; }
+
+/* ---------- Диалог ---------- */
+#dialogue {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 38%;
+  z-index: 10;
+  background: linear-gradient(#221d16, #17130e);
+  border-top: .25em solid #5c5340;
+  padding: .7em 1.2em .8em;
+  display: flex;
+  flex-direction: column;
+  gap: .3em;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+#speaker {
+  font-size: .75em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+#speaker.you { color: #8fc5a1; }
+
+#text { font-size: 1.15em; min-height: 2.6em; flex: none; }
+#text.you { color: #cfe6d6; font-style: italic; }
+#dialogue.choosing #text { font-size: .95em; min-height: 0; }
+
+#choices {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: .3em;
+  cursor: default;
+}
+#choices .hint { font-size: .75em; color: #a99d80; }
+#choices .hint.dev { color: #e8a09a; }
+.hint-row { display: flex; justify-content: space-between; align-items: center; gap: 1em; }
+.hint-row .hint { flex: 1; }
+.btn.back { font-size: .75em; padding: .1em .7em; }
+
+#next {
+  position: absolute;
+  right: 1.2em; bottom: .5em;
+  color: var(--gold);
+  animation: blink 1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ---------- Кнопки выбора ---------- */
+.btn {
+  position: relative;
+  background: #2c261d;
+  color: var(--ink);
+  border: .12em solid var(--line);
+  font: inherit;
+  font-size: .9em;
+  padding: .25em .7em;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  gap: .6em;
+  align-items: baseline;
+}
+.btn:hover { background: #3d3527; border-color: #b9a572; }
+.btn .num {
+  flex: none;
+  min-width: 1.4em;
+  text-align: center;
+  background: #12100c;
+  color: var(--gold);
+  font-size: .8em;
+  padding: 0 .3em;
+}
+
+.mood-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .5em;
+}
+.btn.mood { justify-content: center; align-items: center; padding: .7em .4em; font-size: 1em; }
+.btn.ghost { color: #b3a98f; border-style: dashed; }
+
+/* Вопросы кандидата интервьюеру: две колонки */
+.ask-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .2em .5em;
+}
+.ask-grid .btn { font-size: .72em; padding: .1em .6em; padding-right: 1.6em; }
+
+/* Режим разработчика: верные варианты зелёным, ведущие к отказу красным */
+.btn.dev-correct {
+  border-color: var(--ok);
+  box-shadow: inset 0 0 0 .15em var(--ok);
+  background: #1c3322;
+}
+.btn.dev-correct::after {
+  content: "✓";
+  position: absolute;
+  right: .5em;
+  color: var(--ok);
+  font-weight: bold;
+}
+.btn.dev-bad {
+  border-color: var(--bad);
+  box-shadow: inset 0 0 0 .15em var(--bad);
+  background: #3a1c1a;
+}
+.btn.dev-bad::after {
+  content: "✗";
+  position: absolute;
+  right: .5em;
+  color: var(--bad);
+  font-weight: bold;
+}
+
+/* ---------- Экраны ---------- */
+.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 7, 5, .84);
+}
+.screen.opaque {
+  background: radial-gradient(ellipse at 50% 40%, #2a2620, #12100d 80%);
+  animation: fadein 1s both;
+}
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.paper {
+  background: var(--paper);
+  color: var(--paper-ink);
+  padding: 1.4em 2.4em 1.6em;
+  max-width: 62%;
+  text-align: center;
+  border: .2em solid #8a7a52;
+  box-shadow: .4em .4em 0 rgba(0, 0, 0, .55);
+  transform: rotate(-.6deg);
+}
+.paper h1 { margin: 0 0 .2em; font-size: 2em; letter-spacing: .08em; text-transform: uppercase; }
+.paper p { margin: .4em 0 .8em; }
+.paper .hint { font-size: .7em; opacity: .7; margin: .9em 0 0; }
+
+.paper .big {
+  background: var(--paper-ink);
+  color: var(--paper);
+  border: .15em solid var(--paper-ink);
+  font: inherit;
+  font-weight: bold;
+  padding: .5em 1.6em;
+  cursor: pointer;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.paper .big:hover { background: #46391f; }
+
+/* ---------- Электронное письмо ---------- */
+.mail-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5em;
+  width: 94%;
+  height: 84%;
+  margin-top: 2.4em;
+}
+
+.mail {
+  flex: 1 1 auto;
+  max-width: 70%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #f3f1ea;
+  color: #23201a;
+  border: .15em solid #8a7a52;
+  box-shadow: .4em .4em 0 rgba(0, 0, 0, .55);
+}
+.mail-bar {
+  display: flex;
+  align-items: center;
+  gap: .8em;
+  background: #3b352a;
+  color: #e9e2cf;
+  padding: .3em .8em;
+  font-size: .8em;
+}
+.mail-bar .dots::before { content: "● ● ●"; color: #a89a74; letter-spacing: .1em; }
+
+.mail-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: .8em 1.2em; }
+
+.msg { padding-bottom: .7em; margin-bottom: .7em; border-bottom: .08em dashed #b9b19a; }
+.msg:last-of-type { border-bottom: 0; }
+.msg.appear { animation: fadein .7s both; }
+.msg h3 { margin: 0 0 .4em; font-size: 1em; }
+.msg dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .1em .8em;
+  margin: 0 0 .6em;
+  font-size: .75em;
+  color: #5d5646;
+}
+.msg dt { font-weight: bold; }
+.msg dd { margin: 0; }
+.msg .body { white-space: pre-line; font-size: .85em; line-height: 1.45; }
+.msg.mine { color: #3f3a2e; }
+
+#mail-dev {
+  margin-top: .5em;
+  padding: .3em .6em;
+  font-size: .75em;
+  color: #8a2a22;
+  background: #f1d9d5;
+  border: .08em solid #c9867e;
+}
+
+.mail-actions {
+  display: flex;
+  gap: .8em;
+  padding: .6em 1.2em;
+  border-top: .08em solid #b9b19a;
+  background: #e6e2d4;
+}
+.mbtn {
+  background: #f3f1ea;
+  color: #23201a;
+  border: .12em solid #3b352a;
+  font: inherit;
+  font-size: .8em;
+  padding: .4em 1em;
+  cursor: pointer;
+}
+.mbtn:hover { background: #fff; }
+.mbtn.dark { background: #3b352a; color: #f3f1ea; margin-left: auto; }
+.mbtn.dark:hover { background: #55492f; }
+
+#mail-stamp {
+  flex: none;
+  align-self: center;
+  padding: .15em .6em;
+  border: .22em solid currentColor;
+  font-size: 2.6em;
+  font-weight: bold;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: rotate(-10deg);
+  background: rgba(0, 0, 0, .3);
+  animation: slam .5s cubic-bezier(.2, 1.4, .4, 1) .5s both;
+}
+#mail-stamp.pass { color: #4fd36b; }
+#mail-stamp.fail { color: #e0524a; }
+@keyframes slam {
+  from { transform: rotate(-10deg) scale(2.6); opacity: 0; }
+  to   { transform: rotate(-10deg) scale(1);   opacity: .95; }
+}
+
+/* ---------- Телефоны ---------- */
+/* Компактная раскладка: портретная ориентация или низкий экран (телефон в ландшафте).
+   --scene-h - высота картинки; по ней табличка встаёт на нижний край сцены. */
+@media (orientation: portrait), (max-height: 520px) {
+  html, body { overscroll-behavior: none; }
+  #game {
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  #hud { padding: max(.5em, env(safe-area-inset-top)) max(.6em, env(safe-area-inset-right)) .5em max(.6em, env(safe-area-inset-left)); }
+  #progress, #menu-btn { font-size: .85em; }
+
+  /* Табличка (имя и компания) стоит на столе и наполовину спрятана ЗА окном диалога (z-index ниже) */
+  #nameplate {
+    z-index: 5;
+    top: var(--scene-h);
+    left: max(.6em, env(safe-area-inset-left));
+    transform: translateY(calc(-100% + .6em));
+    max-width: 68%;
+    padding: .3em .8em .9em;
+  }
+  #np-role, #np-industry { display: none; }
+
+  #dialogue { padding-bottom: max(.8em, env(safe-area-inset-bottom)); }
+  .paper { max-width: 92%; padding: 1em 1.2em; }
+  .menu-card { width: 92%; }
+  .mood-row { grid-template-columns: repeat(2, 1fr); }
+  .ask-grid { grid-template-columns: 1fr; }
+  .btn, .ask-grid .btn { font-size: .9em; }
+
+  .mail-layout { flex-direction: column; height: 92%; gap: .6em; margin-top: 2.6em; }
+  .mail { max-width: 100%; width: 100%; flex: 1; min-height: 0; }
+  #mail-stamp { order: -1; font-size: 1.8em; }
+  .mail-actions { flex-wrap: wrap; }
+}
+
+/* Портрет: картинка сверху на всю ширину, остальное место занимает диалог */
+@media (orientation: portrait) {
+  :root { --fs: clamp(14px, 4vw, 18px); }
+  body { align-items: flex-start; }
+  #game {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    --scene-h: calc(100vw * 130 / 320);
+  }
+  #scene { position: relative; height: auto; aspect-ratio: 320 / 130; flex: none; }
+  #fx { display: none; }
+  #dialogue { position: relative; height: auto; flex: 1; min-height: 0; }
+}
+
+/* Телефон в ландшафте: игра на весь экран, картинка сверху (кадр по лицу), диалог снизу */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root { --fs: clamp(11px, 3.4vh, 16px); --fs: clamp(11px, 3.4dvh, 16px); }
+  body { align-items: stretch; }
+  #game { width: 100vw; height: 100vh; height: 100dvh; --scene-h: 46vh; --scene-h: 46dvh; }
+  #scene, #fx { height: 46%; }
+  #scene { object-position: 50% 28%; }
+  #dialogue { height: 54%; padding-top: .5em; }
+  .mood-row { grid-template-columns: repeat(4, 1fr); }
+  .ask-grid { grid-template-columns: 1fr 1fr; }
+  .mail-layout { flex-direction: row; height: 84%; gap: 1.5em; margin-top: 2.2em; }
+  .mail { max-width: 70%; width: auto; }
+  #mail-stamp { order: 0; font-size: 2em; }
+}
+
+/* Сенсорные экраны: крупные цели для нажатия, без подсказок про клавиши */
+@media (pointer: coarse) {
+  .btn .num { display: none; }
+  .btn { min-height: 2.8em; align-items: center; padding-top: .35em; padding-bottom: .35em; }
+  .btn.back { min-height: 2.4em; }
+  #menu-btn, #lang, #dev-btn, .mbtn { min-height: 2.6em; }
+  .paper .hint { display: none; }
+}

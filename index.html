@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Interview</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game">
+    <!-- Сцена: низкое разрешение, масштабируется без сглаживания -->
+    <canvas id="scene" width="320" height="130"></canvas>
+    <div id="fx"></div>
+
+    <!-- Табличка интервьюера. На телефоне стоит у нижнего края картинки, наполовину за окном диалога -->
+    <div id="nameplate" class="hidden">
+      <strong id="np-name"></strong>
+      <small id="np-role"></small>
+      <small id="np-company"></small>
+      <small id="np-industry"></small>
+    </div>
+
+    <!-- Верхняя панель -->
+    <div id="hud">
+      <div id="hud-right">
+        <div id="progress" class="hidden"></div>
+        <button id="menu-btn" type="button" data-i18n="ui.menu"></button>
+      </div>
+    </div>
+
+    <!-- Диалог -->
+    <div id="dialogue">
+      <div id="speaker"></div>
+      <div id="text"></div>
+      <div id="choices"></div>
+      <span id="next" class="hidden">▶</span>
+    </div>
+
+    <!-- Титульный экран -->
+    <div id="screen-title" class="screen">
+      <div class="paper">
+        <h1 data-i18n="ui.title"></h1>
+        <p data-i18n="ui.subtitle"></p>
+        <button id="start-btn" class="big" type="button" data-i18n="ui.start"></button>
+        <p class="hint" data-i18n="ui.hint"></p>
+      </div>
+    </div>
+
+    <!-- Меню: перезапуск, язык, режим разработчика -->
+    <div id="menu" class="overlay hidden">
+      <div class="paper menu-card">
+        <h2 data-i18n="ui.menu.title"></h2>
+        <button id="menu-restart" class="big" type="button" data-i18n="ui.menu.restart"></button>
+        <label class="menu-row"><span data-i18n="ui.menu.language"></span><select id="lang" aria-label="Language"></select></label>
+        <!-- Режим разработчика. Скрыть строку целиком: CONFIG.showDevButton = false в js/game.js -->
+        <div id="dev-row" class="menu-row"><span data-i18n="ui.menu.dev"></span><button id="dev-btn" type="button"></button></div>
+        <button id="menu-close" class="big quiet" type="button" data-i18n="ui.menu.resume"></button>
+      </div>
+    </div>
+
+    <!-- Подтверждение включения режима разработчика -->
+    <div id="confirm" class="overlay top hidden">
+      <div class="paper menu-card">
+        <p id="confirm-text" data-i18n="ui.dev.warn"></p>
+        <div class="confirm-actions">
+          <button id="confirm-yes" class="big" type="button" data-i18n="ui.confirm.yes"></button>
+          <button id="confirm-no" class="big quiet" type="button" data-i18n="ui.confirm.no"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Электронное письмо с результатом -->
+    <div id="screen-mail" class="screen opaque hidden">
+      <div class="mail-layout">
+        <article class="mail">
+          <div class="mail-bar"><span class="dots"></span><span data-i18n="ui.mail.app"></span></div>
+          <div class="mail-scroll"><div id="mail-thread"></div><div id="mail-dev" class="hidden"></div></div>
+          <div class="mail-actions">
+            <button id="why-btn" class="mbtn" type="button" data-i18n="ui.mail.why"></button>
+            <button id="restart-btn" class="mbtn dark" type="button" data-i18n="ui.restart"></button>
+          </div>
+        </article>
+        <div id="mail-stamp"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Порядок важен: i18n -> словари -> данные -> генератор -> сцена -> игра.
+       Обычные скрипты (без модулей), поэтому игра работает и с file:// -->
+  <script src="js/i18n.js"></script>
+  <script src="locales/ru.js"></script>
+  <script src="locales/en.js"></script>
+  <script src="locales/ja.js"></script>
+  <script src="data/questions.js"></script>
+  <script src="data/dictionaries.js"></script>
+  <script src="data/styles.js"></script>
+  <script src="js/generator.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
