@@ -207,6 +207,7 @@ body { display: flex; align-items: center; justify-content: center; }
   color: var(--gold);
   animation: blink 1s steps(2) infinite;
 }
+#next .next-label { display: none; }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* ---------- Кнопки выбора ---------- */
@@ -451,7 +452,6 @@ body { display: flex; align-items: center; justify-content: center; }
   .menu-card { width: 92%; }
   .mood-row { grid-template-columns: repeat(2, 1fr); }
   .ask-grid { grid-template-columns: 1fr; }
-  .btn, .ask-grid .btn { font-size: .9em; }
 
   .mail-layout { flex-direction: column; height: 92%; gap: .6em; margin-top: 2.6em; }
   .mail { max-width: 100%; width: 100%; flex: 1; min-height: 0; }
@@ -461,7 +461,7 @@ body { display: flex; align-items: center; justify-content: center; }
 
 /* Портрет: картинка сверху на всю ширину, остальное место занимает диалог */
 @media (orientation: portrait) {
-  :root { --fs: clamp(14px, 4vw, 18px); }
+  :root { --fs: clamp(17px, 4.9vw, 22px); }
   body { align-items: flex-start; }
   #game {
     width: 100vw;
@@ -478,7 +478,7 @@ body { display: flex; align-items: center; justify-content: center; }
 
 /* Телефон в ландшафте: игра на весь экран, картинка сверху (кадр по лицу), диалог снизу */
 @media (orientation: landscape) and (max-height: 520px) {
-  :root { --fs: clamp(11px, 3.4vh, 16px); --fs: clamp(11px, 3.4dvh, 16px); }
+  :root { --fs: clamp(13px, 4.2vh, 19px); --fs: clamp(13px, 4.2dvh, 19px); }
   body { align-items: stretch; }
   #game { width: 100vw; height: 100vh; height: 100dvh; --scene-h: 46vh; --scene-h: 46dvh; }
   #scene, #fx { height: 46%; }
@@ -493,9 +493,25 @@ body { display: flex; align-items: center; justify-content: center; }
 
 /* Сенсорные экраны: крупные цели для нажатия, без подсказок про клавиши */
 @media (pointer: coarse) {
+  #next .next-label { display: inline; }
   .btn .num { display: none; }
   .btn { min-height: 2.8em; align-items: center; padding-top: .35em; padding-bottom: .35em; }
-  .btn.back { min-height: 2.4em; }
+  .btn.back { min-height: 2.6em; }
+  .ask-grid .btn { font-size: .95em; padding: .45em .7em; }
+  .btn.back { font-size: .85em; padding: .3em .9em; }
+  /* Кнопка «Далее»: крупная, по центру внизу, под большой палец */
+  #next {
+    right: auto; left: 50%; bottom: max(.5em, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    padding: .55em 2.2em;
+    min-width: 40%; text-align: center;
+    font-size: 1.15em; font-weight: bold;
+    background: #2c261d; border: 2px solid var(--gold);
+    box-shadow: 0 .2em 0 #000;
+    animation: none;
+  }
+  #next:active { transform: translateX(-50%) translateY(.1em); }
+  #dialogue:has(#next:not(.hidden)) { padding-bottom: 4.6em; }
   #menu-btn, #lang, #dev-btn, .mbtn { min-height: 2.6em; }
   .paper .hint { display: none; }
 }

@@ -4,6 +4,7 @@ I18n.register('en', {
   'ui.subtitle': 'A Japanese company. One chance. One right answer to every question.',
   'ui.start': 'Enter the office',
   'ui.restart': 'Try again',
+  'ui.next': 'Next ',
   'ui.hint': 'Click or Space to continue · Number keys to choose',
   'ui.menu': '☰ Menu',
   'ui.menu.title': 'Menu',

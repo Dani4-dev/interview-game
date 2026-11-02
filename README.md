@@ -1,3 +1,5 @@
+Working build of the game: [dani4-dev.github.io/interview-game](https://dani4-dev.github.io/interview-game/)
+
 # Job Interview (game)
 
 Run: open `index.html` in a browser (no server needed).
@@ -30,17 +32,17 @@ To remove the switch from the menu entirely: `CONFIG.showDevButton = false` at t
 
 ## Structure
 
-| File | Contents |
-|---|---|
-| `index.html`, `style.css` | markup and styling |
-| `js/i18n.js` | localization: `I18n.t(key, params)` |
-| `js/generator.js` | interviewer generator: name, company, industry, role, style, appearance, office |
-| `js/scene.js` | pixel-art scene; two body templates (male/female) and random details |
-| `js/game.js` | game flow, email; `CONFIG` at the top of the file |
-| `data/dictionaries.js` | dictionaries: first names, last names, 4 word lists for company names, industries, roles |
-| `data/styles.js` | interviewer styles: correct answers, "bad" questions |
-| `data/questions.js` | moods, interviewer questions, list of candidate questions |
-| `locales/ru.js`, `en.js`, `ja.js` | all game texts |
+| File                                    | Contents                                                                                 |
+| --------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `index.html`, `style.css`           | markup and styling                                                                       |
+| `js/i18n.js`                          | localization: `I18n.t(key, params)`                                                    |
+| `js/generator.js`                     | interviewer generator: name, company, industry, role, style, appearance, office          |
+| `js/scene.js`                         | pixel-art scene; two body templates (male/female) and random details                     |
+| `js/game.js`                          | game flow, email; `CONFIG` at the top of the file                                      |
+| `data/dictionaries.js`                | dictionaries: first names, last names, 4 word lists for company names, industries, roles |
+| `data/styles.js`                      | interviewer styles: correct answers, "bad" questions                                     |
+| `data/questions.js`                   | moods, interviewer questions, list of candidate questions                                |
+| `locales/ru.js`, `en.js`, `ja.js` | all game texts                                                                           |
 
 ## Generation
 
@@ -92,17 +94,17 @@ URLパラメータ:`?seed=123` で面接官を固定(デバッグに便利)、`?
 
 ## 構成
 
-| ファイル | 内容 |
-|---|---|
-| `index.html`, `style.css` | マークアップとスタイル |
-| `js/i18n.js` | 多言語化:`I18n.t(キー, パラメータ)` |
-| `js/generator.js` | 面接官ジェネレーター:名前、会社、業界、役職、スタイル、外見、部屋 |
-| `js/scene.js` | ピクセルアートのシーン。男女2つの体型テンプレートとランダムな装飾 |
-| `js/game.js` | ゲームの進行、メール。ファイル冒頭に `CONFIG` |
-| `data/dictionaries.js` | 辞書:名、姓、会社名用の4つの単語辞書、業界、役職 |
-| `data/styles.js` | 面接官のスタイル:正解、「悪い」質問 |
-| `data/questions.js` | 気分、面接官の質問、応募者の質問リスト |
-| `locales/ru.js`, `en.js`, `ja.js` | ゲームの全テキスト |
+| ファイル                                | 内容                                                              |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| `index.html`, `style.css`           | マークアップとスタイル                                            |
+| `js/i18n.js`                          | 多言語化:`I18n.t(キー, パラメータ)`                             |
+| `js/generator.js`                     | 面接官ジェネレーター:名前、会社、業界、役職、スタイル、外見、部屋 |
+| `js/scene.js`                         | ピクセルアートのシーン。男女2つの体型テンプレートとランダムな装飾 |
+| `js/game.js`                          | ゲームの進行、メール。ファイル冒頭に `CONFIG`                   |
+| `data/dictionaries.js`                | 辞書:名、姓、会社名用の4つの単語辞書、業界、役職                  |
+| `data/styles.js`                      | 面接官のスタイル:正解、「悪い」質問                               |
+| `data/questions.js`                   | 気分、面接官の質問、応募者の質問リスト                            |
+| `locales/ru.js`, `en.js`, `ja.js` | ゲームの全テキスト                                                |
 
 ## 生成
 
@@ -154,17 +156,17 @@ URLパラメータ:`?seed=123` で面接官を固定(デバッグに便利)、`?
 
 ## Структура
 
-| Файл | Что внутри |
-|---|---|
-| `index.html`, `style.css` | разметка и оформление |
-| `js/i18n.js` | локализация: `I18n.t(ключ, параметры)` |
-| `js/generator.js` | генератор интервьюера: имя, компания, отрасль, должность, стиль, внешность, кабинет |
-| `js/scene.js` | пиксельная сцена; два шаблона тела (мужской/женский) и случайные детали |
-| `js/game.js` | ход игры, письмо; в начале файла `CONFIG` |
-| `data/dictionaries.js` | словари: имена, фамилии, 4 словаря слов для названия компании, отрасли, должности |
-| `data/styles.js` | стили интервьюеров: верные ответы, «плохие» вопросы |
-| `data/questions.js` | настроения, вопросы интервьюера, список вопросов кандидата |
-| `locales/ru.js`, `en.js`, `ja.js` | все тексты игры |
+| Файл                                | Что внутри                                                                                                                                     |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`, `style.css`           | разметка и оформление                                                                                                                |
+| `js/i18n.js`                          | локализация: `I18n.t(ключ, параметры)`                                                                                        |
+| `js/generator.js`                     | генератор интервьюера: имя, компания, отрасль, должность, стиль, внешность, кабинет |
+| `js/scene.js`                         | пиксельная сцена; два шаблона тела (мужской/женский) и случайные детали                      |
+| `js/game.js`                          | ход игры, письмо; в начале файла `CONFIG`                                                                                    |
+| `data/dictionaries.js`                | словари: имена, фамилии, 4 словаря слов для названия компании, отрасли, должности      |
+| `data/styles.js`                      | стили интервьюеров: верные ответы, «плохие» вопросы                                                         |
+| `data/questions.js`                   | настроения, вопросы интервьюера, список вопросов кандидата                                           |
+| `locales/ru.js`, `en.js`, `ja.js` | все тексты игры                                                                                                                            |
 
 ## Генерация
 
